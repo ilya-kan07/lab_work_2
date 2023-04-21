@@ -2,7 +2,73 @@
 using namespace std;
 
 int tabs = 0;
-int kol_vo = 0;
+int count_tabs = 0;
+int counter, value;
+
+struct Branch;
+void Add(int aData, Branch*& aBranch);
+void print(Branch* aBranch);
+void traversal_tree(Branch*& aBranch);
+void insert_element(int aData, Branch*& aBranch);
+void is_Empty(Branch*& aBranch);
+void FindDouble(Branch*& aBranch);
+void FreeTree(Branch* aBranch);
+
+int main()
+{
+    setlocale(LC_ALL, "rus");
+
+    Branch* Root = 0;
+    int count_elements;
+    int element;
+    int elem;
+
+    cout << "Введите кол-во элементов для будущего дерева: ";
+    cin >> count_elements;
+    cout << endl;
+
+    cout << "Проверим дерево на пустоту: " << endl;
+    is_Empty(Root);
+    cout << endl;
+
+    cout << "Введите элементы бинарного дерева: ";
+    for (int i = 0; i < count_elements; i++)
+    {
+        cin >> elem;
+        Add(elem, Root);
+    }
+
+    cout << "Проверим дерево на пустоту: " << endl;
+    is_Empty(Root);
+    cout << endl;
+
+    cout << "Вывод бинарного дерева: " << endl;
+    print(Root);
+    cout << endl;
+
+    cout << "Прямой обход бинарного дерева: " << endl;
+    traversal_tree(Root);
+    cout << endl;
+
+    cout << "Вершины с одинаковыми номерами: " << endl;
+    FindDouble(Root);
+
+    cout << "Добавим новый элемент в бинарное дерево:" << endl;
+    cout << "Введите новый элемент: ";
+    cin >> element;
+    insert_element(element, Root);
+
+    cout << "Вывод бинарного дерева: " << endl;
+    print(Root);
+    cout << endl;
+
+    cout << "Вершины с одинаковыми номерами: " << endl;
+    FindDouble(Root);
+
+    FreeTree(Root);
+    cout << "Вся динамическая память очищена..." << endl;
+    return 0;
+}
 
 struct Branch
 {
@@ -21,7 +87,6 @@ void Add(int aData, Branch*& aBranch)
         aBranch->RightBranch = 0;
         return;
     }
-
     else
         if (aBranch->Data > aData)
         {
@@ -38,31 +103,27 @@ void print(Branch* aBranch)
     if (!aBranch) return;
     tabs += 7;
 
-
     print(aBranch->LeftBranch);
 
     for (int i = 0; i < tabs; i++) cout << " ";
     cout << aBranch->Data << endl;
 
-
     print(aBranch->RightBranch);
 
     tabs -= 7;
-    return;
 }
 
-void pr_obh(Branch*& aBranch)
+void traversal_tree(Branch*& aBranch)
 {
     if (NULL == aBranch)
         return;
 
     cout << aBranch->Data << endl;
-    pr_obh(aBranch->LeftBranch);
-    pr_obh(aBranch->RightBranch);
+    traversal_tree(aBranch->LeftBranch);
+    traversal_tree(aBranch->RightBranch);
 }
 
-
-void add_elem(int aData, Branch*& aBranch)
+void insert_element(int aData, Branch*& aBranch)
 {
     if (!aBranch)
     {
@@ -75,10 +136,10 @@ void add_elem(int aData, Branch*& aBranch)
     else
     {
         if (aData < aBranch->Data) {
-            add_elem(aData, aBranch->LeftBranch);
+            insert_element(aData, aBranch->LeftBranch);
         }
         else if (aData >= aBranch->Data) {
-            add_elem(aData, aBranch->RightBranch);
+            insert_element(aData, aBranch->RightBranch);
         }
     }
 }
@@ -87,15 +148,13 @@ void is_Empty(Branch*& aBranch)
 {
     if (!aBranch)
     {
-        cout << "Дерево пустое...";
+        cout << "Дерево пустое";
     }
     else
     {
-        cout << "Дерево не пустое...";
+        cout << "Дерево не пустое";
     }
 }
-
-int cnt, val;
 
 void FindDouble(Branch*& aBranch)
 {
@@ -103,34 +162,33 @@ void FindDouble(Branch*& aBranch)
     if (aBranch)
     {
         FindDouble(aBranch->LeftBranch);
-        if (cnt && (aBranch->Data == val))
+        if (counter && (aBranch->Data == value))
         {
-            ++cnt;
-            if ((cnt > 1) && (0 == aBranch->RightBranch))
+            ++counter;
+            if ((counter > 1) && (0 == aBranch->RightBranch))
             {
-                for (int i = 0; i < cnt; i++)
+                for (int i = 0; i < counter; i++)
                 {
-                    cout << val << endl;
+                    cout << value << endl;
                 }
-                cnt = 1;
+                counter = 1;
             }
         }
         else
         {
-            if (cnt > 1)
+            if (counter > 1)
             {
-                for (int i = 0; i < cnt; i++)
+                for (int i = 0; i < counter; i++)
                 {
-                    cout << val << endl;
+                    cout << value << endl;
                 }
             }
-            val = aBranch->Data;
-            cnt = 1;
+            value = aBranch->Data;
+            counter = 1;
         }
         FindDouble(aBranch->RightBranch);
     }
 }
-
 
 void FreeTree(Branch* aBranch)
 {
@@ -141,66 +199,4 @@ void FreeTree(Branch* aBranch)
     FreeTree(aBranch->RightBranch);
 
     delete aBranch;
-    return;
-}
-
-int main()
-{
-    setlocale(LC_ALL, "rus");
-
-    Branch* Root = 0;
-    int vel;
-    int element;
-    int elem;
-
-    cout << "Введите кол-во элементов для будущего дерева: ";
-    cin >> vel;
-    cout << endl;
-
-
-    cout << "Проверим дерево на пустоту до его заполнения: " << endl;
-    is_Empty(Root);
-    cout << endl;
-
-    cout << "Введите элементы бинарного дерева: ";
-    for (int i = 0; i < vel; i++)
-    {
-        cin >> elem;
-        Add(elem, Root);
-    }
-
-    cout << "Проверим дерево на пустоту после его заполнения: " << endl;
-    is_Empty(Root);
-    cout << endl;
-
-    cout << "Вывод бинарного дерева: " << endl;
-    print(Root);
-    cout << endl;
-
-    cout << "Прямой обход бинарного дерева: " << endl;
-    pr_obh(Root);
-    cout << endl;
-
-    cout << "Вершины с одинаковыми номерами: " << endl;
-    FindDouble(Root);
-
-    cout << "Добавим новый элемент в бинарное дерево:" << endl;
-    cout << "Введите новый элемент: ";
-    cin >> element;
-    add_elem(element, Root);
-
-    cout << "Вывод бинарного дерева: " << endl;
-    print(Root);
-    cout << endl;
-
-    cout << "Вывод бинарного дерева: " << endl;
-    print(Root);
-    cout << endl;
-
-    cout << "Вершины с одинаковыми номерами: " << endl;
-    FindDouble(Root);
-
-    FreeTree(Root);
-    cout << "Вся динамическая память очищена..." << endl;
-    return 0;
 }
